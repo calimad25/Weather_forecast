@@ -1,10 +1,31 @@
 import requests
+import pprint
 
 url1 = "https://api.openweathermap.org/data/2.5/forecast?q=Madrid&appid=8ac2f887096da01213fa3db827e593d4&units=metric"
 url2 = "https://api.openweathermap.org/data/2.5/forecast?lat=40.1&lon=3.4&appid=8ac2f887096da01213fa3db827e593d4&units=metric"
 # r = requests.get(url1)
-# print(r.json())
+# print(r.json()) # below is how one item from the 'list' looks like
 
+# {'clouds': {'all': 0},
+#  'dt': 1673805600,
+#  'dt_txt': '2023-01-15 18:00:00',
+#  'main': {'feels_like': 6.01,
+#           'grnd_level': 999,
+#           'humidity': 46,
+#           'pressure': 1018,
+#           'sea_level': 1018,
+#           'temp': 7.07,
+#           'temp_kf': -2.19,
+#           'temp_max': 9.26,
+#           'temp_min': 7.07},
+#  'pop': 0,
+#  'sys': {'pod': 'd'},
+#  'visibility': 10000,
+#  'weather': [{'description': 'clear sky',
+#               'icon': '01d',
+#               'id': 800,
+#               'main': 'Clear'}],
+#  'wind': {'deg': 359, 'gust': 2.65, 'speed': 1.77}}
 
 class Weather:
 
@@ -12,22 +33,33 @@ class Weather:
         if city:  # checks if city is None => False
             url = f"https://api.openweathermap.org/data/2.5/forecast?q={city}&appid={apikey}&units=metric"
             r = requests.get(url)
-            self.data = r.json()
+            self.data = r.json()  # dictionary
         elif lat and lon:
             url = f"https://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&appid={apikey}&units=metric"
             r = requests.get(url)
             self.data = r.json()
         else:
-            print("Provide either a city or lat and lon arguments")
+            raise TypeError("Provide either a city or lat and lon arguments")
+            # replace the error message cuz print will not be shown cuz of the error
 
     def next_12h(self):
-        return self.data
+        return self.data['list'][:4]
+        # return only the first 4 items 'list' from the json dict.
+        # one item contains weather data for the next 3 hours => 3x4 = 12
 
     def next_12h_simplified(self):
-        pass
+        simple_data = []
+        for i in self.data['list'][:4]:
+            simple_data.append((i['dt_txt'], i['main']['temp'], i['weather'][0]['description']))
+            # cannot append multiple items. Only one => extract data as a tuple => append a tuple
+        return simple_data  # return can only return the first data. => return the appended empty list
+        # for loop needed cuz [:4] cannot work at return TypeError: list indices must be integers or slices, not str
+        # i['dt_text'] = self.data['list'][0]['dt_txt']
+        # if you don't use return it will automatically return a None value!
 
 
-# weather = Weather(apikey="8ac2f887096da01213fa3db827e593d4", city="Rome")
-weather = Weather(apikey="8ac2f887096da01213fa3db827e593d4", lat=4.1, lon=4.5)
+weather = Weather(apikey="8ac2f887096da01213fa3db827e593d4", city="Rome")
+# weather = Weather(apikey="8ac2f887096da01213fa3db827e593d4", lat=4.1, lon=4.5)
+# weather = Weather(apikey="8ac2f887096da01213fa3db827e593d4")
 # print(weather.data)
-print(weather.next_12h())
+pprint.pprint(weather.next_12h_simplified())
