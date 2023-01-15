@@ -1,5 +1,4 @@
 import requests
-import pprint
 
 
 class Weather:
@@ -53,3 +52,4 @@ class Weather:
         for i in self.data['list'][:4]:
             simple_data.append((i['dt_txt'], i['main']['temp'], i['weather'][0]['description']))
         return simple_data
+
