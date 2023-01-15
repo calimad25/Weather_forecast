@@ -49,6 +49,7 @@ weather = Weather(apikey="8ac2f887096da01213fa3db827e593d4", city="asdasd")
 pprint.pprint(weather.next_12h_simplified())
 
 
+
 # {'clouds': {'all': 0},
 #  'dt': 1673805600,
 #  'dt_txt': '2023-01-15 18:00:00',
