@@ -48,6 +48,9 @@ weather = Weather(apikey="8ac2f887096da01213fa3db827e593d4", city="asdasd")
 # print(weather.data)
 pprint.pprint(weather.next_12h_simplified())
 
+"""
+!!! See last course from udemy Advenced Python Programming for indications on how to uploud on pypi.org !!!
+"""
 
 # {'clouds': {'all': 0},
 #  'dt': 1673805600,
